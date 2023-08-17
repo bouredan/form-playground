@@ -2,16 +2,57 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Template {
+  id       String @id
+  schema   String // TODO prolly make tables from these
+  uiSchema String // TODO prolly make tables from these
+  forms    Form[]
+}
+
+model Form {
+  id         String   @id @default(cuid())
+  template   Template @relation(fields: [templateId], references: [id])
+  templateId String
+  formData   String
+}
+
+// Data
+model User {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model Address {
+  id     Int    @id @default(autoincrement())
+  street String
+  city   String
+}
+
+//FORM
+
+model ElementType {
+  name     String    @unique
+  elements Element[]
+}
+
+model Element {
+  id              Int         @id @default(autoincrement())
+  form            Form        @relation(fields: [formId], references: [id])
+  formId          Int
+  elementType     ElementType @relation(fields: [elementTypeName], references: [name])
+  elementTypeName String
+}
+
+model Document {
+  id       Int       @id @default(autoincrement())
+  title    String
+  elements Element[]
 }
