@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import { z } from "zod";
 import AutoForm, { AutoFormSubmit } from "~/components/ui/auto-form";
-import { templateSchema } from "~/server/api/routers/template";
 import { api } from "~/utils/api";
+
+export const templateSchema = z.object({
+  id: z.string(),
+  elements: z.string(),
+});
+
 function App() {
   const { mutate: addTemplate } = api.template.add.useMutation();
 
