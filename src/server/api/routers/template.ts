@@ -1,4 +1,7 @@
-import { type PrismaClient, type Template as PrismaTemplate } from "@prisma/client";
+import {
+  type PrismaClient,
+  type Template as PrismaTemplate,
+} from "@prisma/client";
 import { z } from "zod";
 import { type TemplateElement, type Template } from "~/components/template";
 import { templateSchema } from "~/pages";
@@ -24,7 +27,21 @@ export async function getTemplate(id: string, prisma: PrismaClient) {
 }
 
 export const templateRouter = createTRPCRouter({
-  add: publicProcedure.input(templateSchema).mutation(({ ctx, input }) => {
+  upsert: publicProcedure.input(templateSchema).mutation(({ ctx, input }) => {
+    return ctx.prisma.template.upsert({
+      where: {
+        id: input.id,
+      },
+      create: {
+        id: input.id,
+        elements: input.elements,
+      },
+      update: {
+        elements: input.elements,
+      },
+    });
+  }),
+  addMany: publicProcedure.input(templateSchema).mutation(({ ctx, input }) => {
     return ctx.prisma.template.create({
       data: {
         id: input.id,

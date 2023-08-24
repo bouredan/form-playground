@@ -21,7 +21,7 @@ model Form {
   templateId  String
   template    Template      @relation(fields: [templateId], references: [id])
   formData    String
-  readonly    Boolean       @default(false)
+  disabled    Boolean       @default(false)
   dynamicData DynamicData[]
 }
 
@@ -42,14 +42,27 @@ model DynamicData {
 
 // Data
 model User {
-  id   Int    @id @default(autoincrement())
-  name String
+  id                         Int       @id @default(autoincrement())
+  name                       String
+  projectConsultantRelations Project[]
 }
 
 model Address {
-  id     Int    @id @default(autoincrement())
-  street String
-  city   String
+  id                      Int       @id @default(autoincrement())
+  street                  String
+  city                    String
+  billingAddressRelations Project[] @relation("billingAddressRelation")
+  onsiteAddressRelations  Project[] @relation("onsiteAddressRelation")
+}
+
+model Project {
+  id               Int     @id @default(autoincrement())
+  consultantId     Int
+  consultant       User    @relation(fields: [consultantId], references: [id])
+  billingAddressId Int
+  billingAddress   Address @relation("billingAddressRelation", fields: [billingAddressId], references: [id])
+  onsiteAddressId  Int
+  onsiteAddress    Address @relation("onsiteAddressRelation", fields: [onsiteAddressId], references: [id])
 }
 
 //FORM

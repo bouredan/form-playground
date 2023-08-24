@@ -30,11 +30,7 @@ export default function FormPage() {
     </div>
   );
 }
-// select pro entity s navazanim na funkce/sources kde data dostat
-// project.primarySalesConsultant.name
 
 // TODO signature ukladat jako obrazek, readonly mode,
-
-// MOZNA nemame dynamic-data type ale pouze entity jednotlive
 
 // DONE natahnout data pri vytvareni a ulozit do db, window.print()

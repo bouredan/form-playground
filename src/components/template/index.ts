@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface Template {
   id: string;
   elements: Array<TemplateElement>;
@@ -11,15 +13,11 @@ export type TemplateElement =
   | DynamicDataElement
   | SignatureElement;
 
-export type DynamicDataElement = DynamicAddressElement | DynamicUserElement;
-
 export type TemplateElementType = TemplateElement["type"];
-export type DynamicDataElementEntity = DynamicDataElement["entity"];
-export type DynamicDataSource = DynamicDataElement["source"];
-
 export interface InputElement {
   type: "input";
   name: string;
+  label: string;
 }
 
 export interface TextElement {
@@ -30,6 +28,7 @@ export interface TextElement {
 export interface ImageElement {
   type: "image";
   src: string;
+  alt?: string;
 }
 
 export interface Layout2Cols {
@@ -37,25 +36,42 @@ export interface Layout2Cols {
   childrenElements: Array<TemplateElement>;
 }
 
+export interface SignatureElement {
+  type: "signature";
+}
+
+// Dynamic data section
+
 interface DynamicDataElementBase {
   type: "dynamic";
   id: string;
 }
 
-type AddressSource = "billing-address";
-
-export interface DynamicAddressElement extends DynamicDataElementBase {
-  entity: "address";
-  source: AddressSource;
+const projectAddressOptions = ["billing-address", "onsite-address"] as const;
+export const projectAddressOptionSchema = z.enum(projectAddressOptions);
+type ProjectAddressOption = z.infer<typeof projectAddressOptionSchema>;
+export interface ProjectAddressElement extends DynamicDataElementBase {
+  entity: "project";
+  entityOption: ProjectAddressOption;
+  component: "address";
 }
 
+const projectUserOptions = ["consultant"] as const;
+export const projectUserOptionSchema = z.enum(projectUserOptions);
+export type ProjectUserOption = z.infer<typeof projectUserOptionSchema>;
 export interface DynamicUserElement extends DynamicDataElementBase {
-  entity: "user";
-  source: UserSource;
+  entity: "project";
+  entityOption: ProjectUserOption;
+  component: "user";
 }
 
-type UserSource = "project-consultant";
+export const projectOptionSchema = z.enum([
+  ...projectAddressOptions,
+  ...projectUserOptions,
+]);
 
-export interface SignatureElement {
-  type: "signature";
-}
+export type ProjectOption = z.infer<typeof projectOptionSchema>;
+
+export type DynamicDataElement = ProjectAddressElement | DynamicUserElement;
+export type DynamicDataEntity = DynamicDataElement["entity"];
+export type DynamicDataComponent = DynamicDataElement["component"];

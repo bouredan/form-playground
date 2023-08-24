@@ -1,11 +1,28 @@
 import { Input } from "~/components/ui/input";
-import { type InputElement } from "..";
 
-export function InputElement(props: InputElement) {
+/**
+ * A FormInput component can handle a specific Zod type (e.g. "ZodBoolean")
+ */
+export type InputElementProps = {
+  label: string;
+  isRequired: boolean;
+  fieldProps: object;
+};
+
+export function InputElement({
+  label,
+  isRequired,
+  fieldProps,
+}: InputElementProps) {
   return (
-    <div key={props.name}>
-      <label>{props.name}</label>
-      <Input {...props} />
+    <div>
+      <label>
+        {label}
+        {isRequired && <span className="text-destructive"> *</span>}
+      </label>
+      <div>
+        <Input type="text" {...fieldProps} />
+      </div>
     </div>
   );
 }
