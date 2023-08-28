@@ -48,7 +48,7 @@ interface DynamicDataElementBase {
 }
 
 const projectAddressOptions = ["billing-address", "onsite-address"] as const;
-export const projectAddressOptionSchema = z.enum(projectAddressOptions);
+const projectAddressOptionSchema = z.enum(projectAddressOptions);
 type ProjectAddressOption = z.infer<typeof projectAddressOptionSchema>;
 export interface ProjectAddressElement extends DynamicDataElementBase {
   entity: "project";
@@ -57,19 +57,18 @@ export interface ProjectAddressElement extends DynamicDataElementBase {
 }
 
 const projectUserOptions = ["consultant"] as const;
-export const projectUserOptionSchema = z.enum(projectUserOptions);
-export type ProjectUserOption = z.infer<typeof projectUserOptionSchema>;
+const projectUserOptionSchema = z.enum(projectUserOptions);
+type ProjectUserOption = z.infer<typeof projectUserOptionSchema>;
 export interface DynamicUserElement extends DynamicDataElementBase {
   entity: "project";
   entityOption: ProjectUserOption;
   component: "user";
 }
 
-export const projectOptionSchema = z.enum([
+const projectOptionSchema = z.enum([
   ...projectAddressOptions,
   ...projectUserOptions,
 ]);
-
 export type ProjectOption = z.infer<typeof projectOptionSchema>;
 
 export type DynamicDataElement = ProjectAddressElement | DynamicUserElement;

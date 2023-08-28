@@ -2,7 +2,6 @@ import { useRef } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { Button } from "~/components/ui/button";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface SignatureElementProps {
   onSubmit: (dataURL: string) => void;
 }

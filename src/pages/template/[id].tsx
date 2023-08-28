@@ -40,14 +40,22 @@ function CreateFormForm({ template }: { template: Template }) {
   const onSubmit = async ({ projectId }: CreateFormFormValues) => {
     const form = await createForm({
       templateId: template.id,
-      projectId: Number(projectId),
+      dynamicDataEntityArgs: [
+        {
+          project: projectId,
+        },
+      ],
     });
     void router.push(`/form/${form.id}`);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Input {...register("projectId")} placeholder="Zadejte id projektu" />
+      <Input
+        type="number"
+        {...register("projectId", { valueAsNumber: true })}
+        placeholder="Zadejte id projektu"
+      />
       <Button type="submit">Create form</Button>
     </form>
   );
